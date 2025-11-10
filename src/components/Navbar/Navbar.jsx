@@ -1,20 +1,37 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useRef, use } from "react";
 import { Link, NavLink } from "react-router";
+import { motion, AnimatePresence } from "framer-motion";
 import logo from "/logo.png";
 import { AuthContext } from "../../contexts/AuthContext";
 
 const Navbar = () => {
-  const { user, signOutUser } = useContext(AuthContext);
+  const { user, signOutUser } = use(AuthContext);
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "dark");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
     localStorage.setItem("theme", theme);
   }, [theme]);
 
-  const toggleTheme = () => setTheme((prev) => (prev === "light" ? "dark" : "light"));
-  const handleLogout = () => signOutUser().catch((err) => console.log(err));
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setUserDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const toggleTheme = () =>
+    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+  const handleLogout = () => {
+    signOutUser().catch((err) => console.log(err));
+    setUserDropdownOpen(false);
+  };
 
   const navItems = (
     <>
@@ -22,7 +39,11 @@ const Navbar = () => {
         <NavLink
           to="/"
           end
-          className={({ isActive }) => `text-base ${isActive ? "border-b-2 border-primary font-semibold" : ""}`}
+          className={({ isActive }) =>
+            `text-base ${
+              isActive ? "border-b-2 border-primary font-semibold" : ""
+            }`
+          }
         >
           Home
         </NavLink>
@@ -31,17 +52,13 @@ const Navbar = () => {
         <NavLink
           to="/movies"
           end
-          className={({ isActive }) => `text-base ${isActive ? "border-b-2 border-primary font-semibold" : ""}`}
+          className={({ isActive }) =>
+            `text-base ${
+              isActive ? "border-b-2 border-primary font-semibold" : ""
+            }`
+          }
         >
           All Movies
-        </NavLink>
-      </li>
-      <li>
-        <NavLink
-          to="/movies/my-collection"
-          className={({ isActive }) => `text-base ${isActive ? "border-b-2 border-primary font-semibold" : ""}`}
-        >
-          My Collection
         </NavLink>
       </li>
     </>
@@ -64,7 +81,7 @@ const Navbar = () => {
       </div>
 
       {/* Right-side icons */}
-      <div className="navbar-end hidden lg:flex items-center gap-4">
+      <div className="navbar-end hidden lg:flex items-center gap-4 relative">
         {/* Theme toggle */}
         <label className="relative inline-block w-10 h-5 cursor-pointer">
           <input
@@ -77,10 +94,11 @@ const Navbar = () => {
           <span className="absolute h-4 w-4 rounded-full bg-gray-400 shadow top-[0.15rem] left-[0.15rem] transition-all duration-300 peer-checked:translate-x-[1.25rem] peer-checked:bg-white"></span>
         </label>
 
-        {/* Auth buttons */}
+        {/* User dropdown */}
         {user ? (
-          <>
+          <div className="relative" ref={dropdownRef}>
             <img
+              onClick={() => setUserDropdownOpen((prev) => !prev)}
               src={
                 user.photoURL
                   ? user.photoURL.includes("googleusercontent")
@@ -89,19 +107,55 @@ const Navbar = () => {
                   : "https://cdn-icons-png.flaticon.com/512/219/219983.png"
               }
               alt={user.displayName || "User"}
-              className="w-8 h-8 rounded-full"
+              className="w-8 h-8 rounded-full cursor-pointer"
             />
-            <button
-              onClick={handleLogout}
-              className="btn btn-outline btn-sm rounded-full px-4"
-            >
-              Logout
-            </button>
-          </>
+            <AnimatePresence>
+              {userDropdownOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2 }}
+                  className="absolute right-0 mt-2 w-48 bg-base-200 border border-base-300 rounded-lg shadow-lg z-50 flex flex-col overflow-hidden"
+                >
+                  <Link
+                    to="/my-collection"
+                    className="px-4 py-2 hover:bg-base-300 rounded-t-lg"
+                    onClick={() => setUserDropdownOpen(false)}
+                  >
+                    My Collection
+                  </Link>
+                  <Link
+                    to="/watchlist"
+                    className="px-4 py-2 hover:bg-base-300"
+                    onClick={() => setUserDropdownOpen(false)}
+                  >
+                    Watch List
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="px-4 py-2 hover:bg-red-600 hover:text-white rounded-b-lg text-left w-full text-red-500 font-semibold"
+                  >
+                    Logout
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         ) : (
           <>
-            <Link to="/login" className="btn btn-outline btn-sm rounded-full px-4">Login</Link>
-            <Link to="/register" className="btn btn-primary btn-sm rounded-full px-4">Register</Link>
+            <Link
+              to="/login"
+              className="btn btn-outline btn-sm rounded-full px-4"
+            >
+              Login
+            </Link>
+            <Link
+              to="/register"
+              className="btn btn-primary btn-sm rounded-full px-4"
+            >
+              Register
+            </Link>
           </>
         )}
       </div>
@@ -112,8 +166,23 @@ const Navbar = () => {
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           className="btn btn-ghost btn-circle"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={mobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d={
+                mobileMenuOpen
+                  ? "M6 18L18 6M6 6l12 12"
+                  : "M4 6h16M4 12h16M4 18h16"
+              }
+            />
           </svg>
         </button>
       </div>
@@ -122,6 +191,7 @@ const Navbar = () => {
       {mobileMenuOpen && (
         <div className="absolute top-full left-0 w-full bg-base-100 shadow-md border-t border-base-300 flex flex-col p-4 gap-3 lg:hidden z-50">
           <ul className="flex flex-col gap-2">{navItems}</ul>
+
           {/* Theme toggle */}
           <div className="flex items-center mt-2">
             <label className="relative inline-block w-10 h-5 cursor-pointer">
@@ -140,28 +210,41 @@ const Navbar = () => {
           <div className="flex flex-col gap-2 mt-2">
             {user ? (
               <>
-                <img
-                  src={
-                    user.photoURL
-                      ? user.photoURL.includes("googleusercontent")
-                        ? `${user.photoURL}?sz=200`
-                        : user.photoURL
-                      : "https://cdn-icons-png.flaticon.com/512/219/219983.png"
-                  }
-                  alt={user.displayName || "User"}
-                  className="w-8 h-8 rounded-full"
-                />
+                <Link
+                  to="/my-collection"
+                  className="px-4 py-2 hover:bg-base-300 rounded-lg"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  My Collection
+                </Link>
+                <Link
+                  to="/watchlist"
+                  className="px-4 py-2 hover:bg-base-300 rounded-lg"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Watch List
+                </Link>
                 <button
                   onClick={handleLogout}
-                  className="btn btn-outline btn-sm rounded-full px-4"
+                  className="px-4 py-2 hover:bg-red-600 hover:text-white rounded-lg text-left w-full text-red-500 font-semibold"
                 >
                   Logout
                 </button>
               </>
             ) : (
               <>
-                <Link to="/login" className="btn btn-outline btn-sm rounded-full px-4">Login</Link>
-                <Link to="/register" className="btn btn-primary btn-sm rounded-full px-4">Register</Link>
+                <Link
+                  to="/login"
+                  className="btn btn-outline btn-sm rounded-full px-4"
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/register"
+                  className="btn btn-primary btn-sm rounded-full px-4"
+                >
+                  Register
+                </Link>
               </>
             )}
           </div>

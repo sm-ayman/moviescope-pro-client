@@ -9,6 +9,8 @@ import MyCollection from "../pages/MyCollection/MyCollection";
 import Login from "../pages/Login/Login";
 import Register from "../pages/Register/Register";
 import PrivateRoute from "./PrivateRoute";
+import Error404 from "../pages/Err/Error404";
+import WatchList from "../pages/WatchList/WatchList";
 
 const router = createBrowserRouter([
   {
@@ -54,9 +56,17 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
-
+      {
+        path: "/watchlist",
+        element: (
+          <PrivateRoute>
+            <WatchList />
+          </PrivateRoute>
+        ),
+      },
       { path: "/login", element: <Login /> },
       { path: "/register", element: <Register /> },
+      { path: "*", element: <Error404 /> },
     ],
   },
 ]);
