@@ -1,20 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Link } from "react-router";
 import LoadingSpinner from "../../components/Spinner/LoadingSpinner";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const AllMovies = () => {
   const [allMovies, setAllMovies] = useState([]);
+  const { loading } = useContext(AuthContext);
 
   useEffect(() => {
     fetch("http://localhost:5000/movies")
       .then((res) => res.json())
-      .then((data) => {
-        setAllMovies(data);
-      })
-      .catch((err) => {
-        console.error("Failed to fetch movies:", err);
-      });
+      .then((data) => setAllMovies(data))
+      .catch((err) => console.error("Failed to fetch movies:", err));
   }, []);
+
+  if (loading) {
+    return (
+      <div className="w-full h-screen flex items-center justify-center bg-base-100 dark:bg-gray-900 transition-colors duration-300">
+        <LoadingSpinner />
+      </div>
+    );
+  }
 
   return (
     <section className="w-full py-16 bg-base-100 dark:bg-gray-900 transition-colors duration-300">
@@ -36,10 +42,10 @@ const AllMovies = () => {
               />
               <div className="p-4 flex-1 flex flex-col justify-between">
                 <div>
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">
+                  <h3 className="text-xl font-bold light:text-gray-900 dark:text-white mb-1">
                     {movie.title} ({movie.releaseYear})
                   </h3>
-                  <p className="text-sm text-gray-700 dark:text-gray-300 mb-1">
+                  <p className="text-sm light:text-gray-700 dark:text-gray-300 mb-1">
                     <strong>Genre:</strong> {movie.genre}
                   </p>
                   <p className="text-sm text-yellow-400 font-medium mb-2">
@@ -48,7 +54,7 @@ const AllMovies = () => {
                 </div>
                 <Link
                   to={`/movies/${movie._id}`}
-                  className="mt-4 inline-block px-4 py-2 text-white bg-primary rounded-lg hover:bg-primary/90 text-center"
+                  className="mt-4 inline-block px-4 py-2 text-white dark:text-white bg-primary rounded-lg hover:bg-primary/90 dark:hover:bg-primary/80 text-center transition"
                 >
                   Details
                 </Link>

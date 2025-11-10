@@ -30,7 +30,7 @@ const RecentlyAddedMovies = () => {
               className="bg-base-200 rounded-xl overflow-hidden shadow-md hover:shadow-xl hover:scale-105 transition cursor-pointer"
             >
               <img
-                src={movie.poster}
+                src={movie.posterUrl}
                 alt={movie.title}
                 className="w-full h-64 object-cover"
               />

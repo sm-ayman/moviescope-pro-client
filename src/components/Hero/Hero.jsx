@@ -1,38 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// Sample featured movies data
-const featuredMovies = [
-  {
-    id: 1,
-    title: "Inception",
-    description:
-      "A thief who steals corporate secrets through dream-sharing technology.",
-    poster: "https://m.media-amazon.com/images/I/51v5ZpFyaFL._AC_SY679_.jpg",
-    link: "#",
-  },
-  {
-    id: 2,
-    title: "Interstellar",
-    description:
-      "A team of explorers travel through a wormhole in space to save humanity.",
-    poster: "https://m.media-amazon.com/images/I/81H4vM7VZ-L._AC_SL1500_.jpg",
-    link: "#",
-  },
-  {
-    id: 3,
-    title: "The Dark Knight",
-    description:
-      "Batman battles the Joker in Gotham City, facing chaos and moral dilemmas.",
-    poster: "https://m.media-amazon.com/images/I/51EbJwl0SkL._AC_SY679_.jpg",
-    link: "#",
-  },
-];
-
 const Hero = () => {
+  const [heroMovies, setHeroMovies] = useState([]);
   const [current, setCurrent] = useState(0);
-  const heroMovies = featuredMovies;
 
+  // fetch top 3 movies
+  useEffect(() => {
+    fetch("http://localhost:5000/movies")
+      .then((res) => res.json())
+      .then((data) => {
+        const topThree = [...data]
+          .sort((a, b) => b.rating - a.rating)
+          .slice(0, 3);
+
+        setHeroMovies(topThree);
+      })
+      .catch((err) => console.error("Failed to fetch movies:", err));
+  }, []);
+
+  // auto slider
   useEffect(() => {
     if (heroMovies.length === 0) return;
 
@@ -50,15 +37,16 @@ const Hero = () => {
           (movie, idx) =>
             idx === current && (
               <motion.div
-                key={movie.id}
+                key={movie._id}
                 className="absolute top-0 left-0 w-full h-full"
                 initial={{ opacity: 0, scale: 0.95, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: -20 }}
                 transition={{ duration: 1 }}
               >
+                {/* Background poster */}
                 <motion.img
-                  src={movie.poster}
+                  src={movie.posterUrl}
                   alt={movie.title}
                   className="w-full h-full object-cover"
                   initial={{ scale: 1.1 }}
@@ -76,18 +64,18 @@ const Hero = () => {
                   >
                     {movie.title}
                   </motion.h2>
+
                   <motion.p
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.5, duration: 0.6 }}
                     className="text-sm md:text-lg mb-4 w-11/12 md:w-1/2"
                   >
-                    {movie.description}
+                    {movie.summary?.slice(0, 150) || "No description available"}
                   </motion.p>
+
                   <motion.a
-                    href={movie.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href={`/movies/${movie._id}`}
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.7, duration: 0.4 }}
