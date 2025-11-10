@@ -1,5 +1,6 @@
 import React, { useEffect, useState, use } from "react";
 import { useParams, Link } from "react-router";
+import { motion } from "framer-motion";
 import LoadingSpinner from "../../components/Spinner/LoadingSpinner";
 import { AuthContext } from "../../contexts/AuthContext";
 
@@ -8,6 +9,10 @@ const MovieDetails = () => {
   const { user } = use(AuthContext);
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
 
   useEffect(() => {
     setLoading(true);
@@ -43,8 +48,7 @@ const MovieDetails = () => {
 
   return (
     <section className="w-full min-h-screen bg-base-100 dark:bg-gray-900 pb-16 transition-colors">
-      
-      {/* Hero Section (unchanged) */}
+      {/* Hero (unchanged) */}
       <div
         className="w-full h-[70vh] bg-cover bg-center bg-no-repeat bg-fixed relative"
         style={{ backgroundImage: `url(${movie.posterUrl})` }}
@@ -52,9 +56,7 @@ const MovieDetails = () => {
         <div className="absolute inset-0 bg-black/60"></div>
 
         <div className="absolute inset-0 flex flex-col justify-end px-10 pb-10 text-white">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            {movie.title}
-          </h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">{movie.title}</h1>
           <p className="text-lg opacity-80">
             {movie.genre} | {movie.releaseYear} | ⭐ {movie.rating}
           </p>
@@ -62,33 +64,73 @@ const MovieDetails = () => {
       </div>
 
       {/* Details Section */}
-      <div className="max-w-5xl mx-auto px-6 mt-12">
-        <div className="rounded-xl shadow-lg p-8 bg-white dark:bg-gray-800 transition-colors border border-gray-200 dark:border-gray-700">
-          
-          {/* Summary */}
-          <h2 className="text-2xl font-bold text-primary mb-4">
+      <motion.div
+        initial={{ opacity: 0, y: 25 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, ease: "easeOut" }}
+        className="max-w-5xl mx-auto px-6 mt-12"
+      >
+        <motion.div
+          initial={{ opacity: 0, scale: 0.97 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6 }}
+          className="rounded-xl shadow-lg p-8 bg-white dark:bg-gray-800 transition-colors border border-gray-200 dark:border-gray-700"
+        >
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-2xl font-bold text-primary mb-4"
+          >
             Summary
-          </h2>
+          </motion.h2>
 
-          <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-8">
+          <motion.p
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="text-gray-700 dark:text-gray-300 leading-relaxed mb-8"
+          >
             {movie.plotSummary}
-          </p>
+          </motion.p>
 
-          {/* Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <Detail label="Genre" value={movie.genre} />
-            <Detail label="Release Year" value={movie.releaseYear} />
-            <Detail label="Director" value={movie.director} />
-            <Detail label="Cast" value={movie.cast} />
-            <Detail label="Duration" value={`${movie.duration} mins`} />
-            <Detail label="Language" value={movie.language} />
-            <Detail label="Country" value={movie.country} />
-            <Detail label="Added By" value={movie.addedBy} />
-          </div>
+          {/* Staggered Detail Grid */}
+          <motion.div
+            variants={{
+              hidden: { opacity: 0 },
+              show: {
+                opacity: 1,
+                transition: {
+                  staggerChildren: 0.12,
+                },
+              },
+            }}
+            initial="hidden"
+            animate="show"
+            className="grid grid-cols-1 md:grid-cols-2 gap-8"
+          >
+            {[
+              ["Genre", movie.genre],
+              ["Release Year", movie.releaseYear],
+              ["Director", movie.director],
+              ["Cast", movie.cast],
+              ["Duration", `${movie.duration} mins`],
+              ["Language", movie.language],
+              ["Country", movie.country],
+              ["Added By", movie.addedBy],
+            ].map(([label, value], idx) => (
+              <DetailMotion key={idx} label={label} value={value} />
+            ))}
+          </motion.div>
 
           {/* Buttons */}
           {isOwner && (
-            <div className="flex gap-4 mt-10">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="flex gap-4 mt-10"
+            >
               <Link
                 to={`/movies/update/${movie._id}`}
                 className="px-5 py-2 bg-primary text-white rounded-lg hover:bg-primary/80 transition"
@@ -99,24 +141,30 @@ const MovieDetails = () => {
               <button className="px-5 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
                 Delete
               </button>
-            </div>
+            </motion.div>
           )}
-
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </section>
   );
 };
 
-const Detail = ({ label, value }) => (
-  <div className="flex flex-col">
+const DetailMotion = ({ label, value }) => (
+  <motion.div
+    variants={{
+      hidden: { opacity: 0, y: 20 },
+      show: { opacity: 1, y: 0 },
+    }}
+    transition={{ duration: 0.5 }}
+    className="flex flex-col"
+  >
     <span className="text-sm text-gray-500 dark:text-gray-400 uppercase tracking-wide">
       {label}
     </span>
     <span className="text-lg text-gray-900 dark:text-gray-100 font-semibold mt-1">
       {value}
     </span>
-  </div>
+  </motion.div>
 );
 
 export default MovieDetails;

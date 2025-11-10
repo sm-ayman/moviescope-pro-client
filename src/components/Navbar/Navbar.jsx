@@ -65,7 +65,7 @@ const Navbar = () => {
   );
 
   return (
-    <div className="navbar bg-base-100 shadow-sm px-4 md:px-8 relative">
+    <div className="navbar bg-base-100 shadow-sm !py-1 md:px-6 sticky top-0 z-50">
       {/* Logo */}
       <div className="navbar-start flex items-center gap-2">
         <Link to="/" className="flex items-center gap-2">
@@ -189,66 +189,81 @@ const Navbar = () => {
 
       {/* Mobile dropdown */}
       {mobileMenuOpen && (
-        <div className="absolute top-full left-0 w-full bg-base-100 shadow-md border-t border-base-300 flex flex-col p-4 gap-3 lg:hidden z-50">
-          <ul className="flex flex-col gap-2">{navItems}</ul>
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.2 }}
+          className="absolute top-full left-0 w-full bg-base-100 shadow-lg border-t border-base-300 p-4 z-50 lg:hidden rounded-b-xl"
+        >
+          <div className="flex flex-col gap-4">
+            {/* Nav links */}
+            <ul className="flex flex-col gap-3 text-base font-medium">
+              {navItems}
+            </ul>
 
-          {/* Theme toggle */}
-          <div className="flex items-center mt-2">
-            <label className="relative inline-block w-10 h-5 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={theme === "light"}
-                onChange={toggleTheme}
-                className="peer absolute w-0 h-0 opacity-0"
-              />
-              <span className="absolute inset-0 bg-base-300 border border-gray-400 rounded-full transition-all duration-300 peer-checked:bg-primary peer-checked:border-primary"></span>
-              <span className="absolute h-4 w-4 rounded-full bg-gray-400 shadow top-[0.15rem] left-[0.15rem] transition-all duration-300 peer-checked:translate-x-[1.25rem] peer-checked:bg-white"></span>
-            </label>
-          </div>
+            {/* Theme toggle */}
+            <div className="flex items-center justify-between py-2 border-t border-base-300">
+              <span className="text-base font-medium">Theme</span>
+              <label className="relative inline-block w-10 h-5 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={theme === "light"}
+                  onChange={toggleTheme}
+                  className="peer absolute w-0 h-0 opacity-0"
+                />
+                <span className="absolute inset-0 bg-base-300 border border-gray-400 rounded-full transition-all duration-300 peer-checked:bg-primary peer-checked:border-primary"></span>
+                <span className="absolute h-4 w-4 rounded-full bg-gray-400 shadow top-[0.15rem] left-[0.15rem] transition-all duration-300 peer-checked:translate-x-[1.25rem] peer-checked:bg-white"></span>
+              </label>
+            </div>
 
-          {/* Auth buttons */}
-          <div className="flex flex-col gap-2 mt-2">
-            {user ? (
-              <>
-                <Link
-                  to="/my-collection"
-                  className="px-4 py-2 hover:bg-base-300 rounded-lg"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  My Collection
-                </Link>
-                <Link
-                  to="/watchlist"
-                  className="px-4 py-2 hover:bg-base-300 rounded-lg"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Watch List
-                </Link>
-                <button
-                  onClick={handleLogout}
-                  className="px-4 py-2 hover:bg-red-600 hover:text-white rounded-lg text-left w-full text-red-500 font-semibold"
-                >
-                  Logout
-                </button>
-              </>
-            ) : (
-              <>
-                <Link
-                  to="/login"
-                  className="btn btn-outline btn-sm rounded-full px-4"
-                >
-                  Login
-                </Link>
-                <Link
-                  to="/register"
-                  className="btn btn-primary btn-sm rounded-full px-4"
-                >
-                  Register
-                </Link>
-              </>
-            )}
+            {/* Auth buttons */}
+            <div className="flex flex-col gap-3 border-t border-base-300 pt-3">
+              {user ? (
+                <>
+                  <Link
+                    to="/my-collection"
+                    className="px-4 py-2 rounded-lg hover:bg-base-300"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    My Collection
+                  </Link>
+
+                  <Link
+                    to="/watchlist"
+                    className="px-4 py-2 rounded-lg hover:bg-base-300"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Watch List
+                  </Link>
+
+                  <button
+                    onClick={handleLogout}
+                    className="px-4 py-2 rounded-lg hover:bg-red-600 hover:text-white text-left w-full text-red-500 font-semibold"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link
+                    to="/login"
+                    className="btn btn-outline btn-sm rounded-full w-full"
+                  >
+                    Login
+                  </Link>
+
+                  <Link
+                    to="/register"
+                    className="btn btn-primary btn-sm rounded-full w-full"
+                  >
+                    Register
+                  </Link>
+                </>
+              )}
+            </div>
           </div>
-        </div>
+        </motion.div>
       )}
     </div>
   );
