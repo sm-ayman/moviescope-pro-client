@@ -1,17 +1,45 @@
-import React, { use } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
 import logo from "/logo.png";
 import { FcGoogle } from "react-icons/fc";
 import { AuthContext } from "../../contexts/AuthContext";
 
 const Login = () => {
-  const { signInUser, signInWithGoogle } = use(AuthContext);
+  useEffect(() => {
+    document.title = "Login | Moviescope Pro";
+  }, []);
+
+  const { signInUser, googleSignIn } = useContext(AuthContext);
+  const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
 
+  // login with email and password
   const handleLogin = (e) => {
-    e.preventdefault();
-    
+    e.preventDefault();
+
+    const password = e.target.password.value;
+
+    signInUser(email, password)
+      .then((res) => {
+        console.log("User logged in:", res.user);
+        e.target.reset();
+        navigate(location.state?.from || "/");
+      })
+      .catch((err) => {
+        console.log("Login error:", err.message);
+      });
+  };
+
+  // login with google
+  const handleGoogleLogin = () => {
+    googleSignIn()
+      .then((res) => {
+        console.log("Google login response: ", res);
+        navigate(location.state?.from || "/movies");
+      })
+      .catch((err) => console.log("Google login error:", err));
   };
 
   return (
@@ -37,7 +65,10 @@ const Login = () => {
             <input
               type="email"
               placeholder="Enter your email"
+              name="email"
+              onChange={(e) => setEmail(e.target.value)}
               className="input input-bordered w-full rounded-lg"
+              required
             />
           </div>
 
@@ -46,11 +77,25 @@ const Login = () => {
             <label className="label">
               <span className="label-text text-base-content/70">Password</span>
             </label>
-            <input
-              type="password"
-              placeholder="Enter your password"
-              className="input input-bordered w-full rounded-lg"
-            />
+
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your password"
+                name="password"
+                className="input input-bordered w-full rounded-lg pr-12"
+                required
+              />
+
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-base-content/60 hover:text-base-content/80"
+              >
+                {showPassword ? "Hide" : "Show"}
+              </button>
+            </div>
+
             <p className="text-right mt-1 text-sm text-primary cursor-pointer hover:underline">
               Forgot Password?
             </p>
@@ -70,7 +115,10 @@ const Login = () => {
         </div>
 
         {/* Google Login */}
-        <button className="btn bg-white text-black border-[#e5e5e5] w-full rounded-full flex items-center gap-2 hover:bg-gray-100">
+        <button
+          onClick={handleGoogleLogin}
+          className="btn bg-white text-black border-[#e5e5e5] w-full rounded-full flex items-center gap-2 hover:bg-gray-100"
+        >
           <FcGoogle size={22} /> Login with Google
         </button>
 
