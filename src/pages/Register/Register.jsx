@@ -7,7 +7,7 @@ import { AuthContext } from "../../contexts/AuthContext";
 const Register = () => {
   const navigate = useNavigate();
   const [errors, setErrors] = useState("");
-  const { googleSignIn, createUser, user, setUser } = use(AuthContext);
+  const { googleSignIn, createUser, setUser } = use(AuthContext);
 
   useEffect(() => {
     document.title = "Register | Moviescope Pro";
@@ -21,7 +21,7 @@ const Register = () => {
     return upper && lower && length;
   };
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
 
     const form = e.target;
@@ -31,25 +31,8 @@ const Register = () => {
     const password = form.password.value;
 
     setErrors("");
-    console.log("Form submitted:", { name, email, photoURL, password });
 
-    createUser(email, password)
-      .then((res) => {
-        const newUser = res.user;
-        const userData = {
-          uid: newUser.uid,
-          email: newUser.email,
-          displayName: name,
-          photoURL:
-            photoURL || "https://cdn-icons-png.flaticon.com/512/219/219983.png",
-        };
-        setUser(userData);
-        console.log(user);
-      })
-      .catch((err) => {
-        console.log("Registration Error", err);
-      });
-
+    // Password validation
     if (!validatePassword(password)) {
       setErrors(
         "Password must be at least 6 characters long, contain at least one uppercase letter, and one lowercase letter."
@@ -57,15 +40,71 @@ const Register = () => {
       return;
     }
 
-    alert("Registration successful!");
+    try {
+      // 1. Create user in Firebase
+      const res = await createUser(email, password);
+      const newUser = res.user;
+
+      const userData = {
+        uid: newUser.uid,
+        email: newUser.email,
+        displayName: name,
+        photoURL:
+          photoURL || "https://cdn-icons-png.flaticon.com/512/219/219983.png",
+      };
+
+      // Save user in context
+      setUser(userData);
+
+      // Save user in your backend
+      const backendRes = await fetch("http://localhost:5000/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData),
+      });
+
+      if (!backendRes.ok) throw new Error("Failed to save user in DB");
+
+      const data = await backendRes.json();
+      console.log("User saved in DB:", data);
+
+      // 4. Navigate to home
+      navigate("/");
+    } catch (err) {
+      console.error("Registration error:", err);
+      setErrors(err.message);
+    }
   };
 
   // Google login
   const handleGoogleRegister = () => {
     googleSignIn()
-      .then((res) => {
-        console.log("Google login success:", res.user);
-        navigate("/");
+      .then(async (res) => {
+        const newUser = res.user;
+        console.log("Google login success:", newUser);
+
+        const userData = {
+          uid: newUser.uid,
+          email: newUser.email,
+          displayName: newUser.displayName || "No Name",
+          photoURL:
+            newUser.photoURL ||
+            "https://cdn-icons-png.flaticon.com/512/219/219983.png",
+        };
+
+        // Send user to backend
+        try {
+          await fetch("http://localhost:5000/users", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(userData),
+          });
+        } catch (err) {
+          console.error("Failed to save user to backend:", err);
+        }
+
+        setUser(userData); 
+        navigate("/"); 
       })
       .catch((err) => {
         setErrors(err.message);
