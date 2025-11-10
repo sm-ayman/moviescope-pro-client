@@ -1,51 +1,62 @@
 import { createBrowserRouter } from "react-router";
-import Home from "../pages/Home/Home";
 import Root from "../layout/Root";
+import Home from "../pages/Home/Home";
 import AllMovies from "../pages/AllMovies/AllMovies";
-import Login from "../pages/Login/Login";
-import Register from "../pages/Register/Register";
-import MyCollection from "../pages/MyCollection/MyCollection";
 import MovieDetails from "../pages/MovieDetails/MovieDetails";
 import AddMovie from "../pages/AddMovie/AddMovie";
 import UpdateMovie from "../pages/UpdateMovie/UpdateMovie";
+import MyCollection from "../pages/MyCollection/MyCollection";
+import Login from "../pages/Login/Login";
+import Register from "../pages/Register/Register";
+import PrivateRoute from "./PrivateRoute";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    Component: Root,
+    element: <Root />,
     children: [
-      {
-        index: true,
-        Component: Home,
-      },
-      {
-        path: "/movies",
-        element: <AllMovies></AllMovies>,
-      },
+      { index: true, element: <Home /> },
+
+      { path: "/movies", element: <AllMovies /> },
+
       {
         path: "/movies/:id",
-        element: <MovieDetails></MovieDetails>,
+        element: (
+          <PrivateRoute>
+            <MovieDetails />
+          </PrivateRoute>
+        ),
       },
+
       {
         path: "/add",
-        element: <AddMovie></AddMovie>,
+        element: (
+          <PrivateRoute>
+            <AddMovie />
+          </PrivateRoute>
+        ),
       },
+
       {
         path: "/movies/update/:id",
-        element: <UpdateMovie></UpdateMovie>,
+        element: (
+          <PrivateRoute>
+            <UpdateMovie />
+          </PrivateRoute>
+        ),
       },
-      {
-        path: "/login",
-        Component: Login,
-      },
-      {
-        path: "/register",
-        element: <Register></Register>,
-      },
+
       {
         path: "/my-collection",
-        element: <MyCollection></MyCollection>,
+        element: (
+          <PrivateRoute>
+            <MyCollection />
+          </PrivateRoute>
+        ),
       },
+
+      { path: "/login", element: <Login /> },
+      { path: "/register", element: <Register /> },
     ],
   },
 ]);

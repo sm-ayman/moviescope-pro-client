@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router";
 
 const AllMovies = () => {
   const [allMovies, setAllMovies] = useState([]);
@@ -10,7 +11,7 @@ const AllMovies = () => {
         setAllMovies(data);
       })
       .catch((err) => {
-        console.error("Failed to fetch recent movies:", err);
+        console.error("Failed to fetch movies:", err);
       });
   }, []);
 
@@ -25,41 +26,31 @@ const AllMovies = () => {
           {allMovies.map((movie) => (
             <div
               key={movie.id}
-              className="bg-white/5 dark:bg-gray-800 backdrop-blur-md rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition transform hover:scale-105 cursor-pointer"
+              className="bg-white/5 dark:bg-gray-800 backdrop-blur-md rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition transform hover:scale-105 cursor-pointer flex flex-col"
             >
               <img
                 src={movie.posterUrl}
                 alt={movie.title}
                 className="w-full h-64 object-cover"
               />
-              <div className="p-4">
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">
-                  {movie.title} ({movie.releaseYear})
-                </h3>
-                <p className="text-sm text-gray-700 dark:text-gray-300 mb-1">
-                  <strong>Genre:</strong> {movie.genre}
-                </p>
-                <p className="text-sm text-gray-700 dark:text-gray-300 mb-1">
-                  <strong>Director:</strong> {movie.director}
-                </p>
-                <p className="text-sm text-gray-700 dark:text-gray-300 mb-1">
-                  <strong>Cast:</strong> {movie.cast}
-                </p>
-                <p className="text-sm text-gray-700 dark:text-gray-300 mb-1">
-                  <strong>Duration:</strong> {movie.duration} mins
-                </p>
-                <p className="text-sm text-gray-700 dark:text-gray-300 mb-1">
-                  <strong>Language:</strong> {movie.language}
-                </p>
-                <p className="text-sm text-gray-700 dark:text-gray-300 mb-1">
-                  <strong>Country:</strong> {movie.country}
-                </p>
-                <p className="text-sm text-yellow-400 font-medium mb-2">
-                  ⭐ {movie.rating}
-                </p>
-                <p className="text-sm text-gray-700 dark:text-gray-300 line-clamp-3">
-                  {movie.plotSummary}
-                </p>
+              <div className="p-4 flex-1 flex flex-col justify-between">
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">
+                    {movie.title} ({movie.releaseYear})
+                  </h3>
+                  <p className="text-sm text-gray-700 dark:text-gray-300 mb-1">
+                    <strong>Genre:</strong> {movie.genre}
+                  </p>
+                  <p className="text-sm text-yellow-400 font-medium mb-2">
+                    ⭐ {movie.rating}
+                  </p>
+                </div>
+                <Link
+                  to={`/movies/${movie._id}`}
+                  className="mt-4 inline-block px-4 py-2 text-white bg-primary rounded-lg hover:bg-primary/90 text-center"
+                >
+                  Details
+                </Link>
               </div>
             </div>
           ))}
