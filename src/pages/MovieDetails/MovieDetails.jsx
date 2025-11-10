@@ -1,6 +1,5 @@
 import React, { useEffect, useState, use } from "react";
 import { useParams, Link } from "react-router";
-
 import LoadingSpinner from "../../components/Spinner/LoadingSpinner";
 import { AuthContext } from "../../contexts/AuthContext";
 
@@ -43,32 +42,40 @@ const MovieDetails = () => {
   const isOwner = user?.email === movie.addedBy;
 
   return (
-    <section className="w-full min-h-screen bg-base-100 dark:bg-gray-900 pb-16">
-      {/* Hero Image */}
+    <section className="w-full min-h-screen bg-base-100 dark:bg-gray-900 pb-16 transition-colors">
+      
+      {/* Hero Section (unchanged) */}
       <div
-        className="w-full h-[60vh] bg-cover bg-center relative"
+        className="w-full h-[70vh] bg-cover bg-center bg-no-repeat bg-fixed relative"
         style={{ backgroundImage: `url(${movie.posterUrl})` }}
       >
-        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+        <div className="absolute inset-0 bg-black/60"></div>
+
         <div className="absolute inset-0 flex flex-col justify-end px-10 pb-10 text-white">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">{movie.title}</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            {movie.title}
+          </h1>
           <p className="text-lg opacity-80">
             {movie.genre} | {movie.releaseYear} | ⭐ {movie.rating}
           </p>
         </div>
       </div>
 
-      {/* Details */}
+      {/* Details Section */}
       <div className="max-w-5xl mx-auto px-6 mt-12">
-        <div className="bg-white/10 dark:bg-gray-800 backdrop-blur-md p-6 rounded-xl shadow-lg">
+        <div className="rounded-xl shadow-lg p-8 bg-white dark:bg-gray-800 transition-colors border border-gray-200 dark:border-gray-700">
+          
+          {/* Summary */}
           <h2 className="text-2xl font-bold text-primary mb-4">
-            Movie Summary
+            Summary
           </h2>
-          <p className="text-gray-700 dark:text-gray-300 mb-6">
+
+          <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-8">
             {movie.plotSummary}
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <Detail label="Genre" value={movie.genre} />
             <Detail label="Release Year" value={movie.releaseYear} />
             <Detail label="Director" value={movie.director} />
@@ -79,17 +86,22 @@ const MovieDetails = () => {
             <Detail label="Added By" value={movie.addedBy} />
           </div>
 
+          {/* Buttons */}
           {isOwner && (
-            <div className="flex gap-4 mt-8">
+            <div className="flex gap-4 mt-10">
               <Link
                 to={`/movies/update/${movie._id}`}
-                className="btn btn-primary"
+                className="px-5 py-2 bg-primary text-white rounded-lg hover:bg-primary/80 transition"
               >
                 Edit
               </Link>
-              <button className="btn btn-error">Delete</button>
+
+              <button className="px-5 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+                Delete
+              </button>
             </div>
           )}
+
         </div>
       </div>
     </section>
@@ -97,11 +109,13 @@ const MovieDetails = () => {
 };
 
 const Detail = ({ label, value }) => (
-  <div>
-    <p className="text-sm text-gray-500 dark:text-gray-400">{label}</p>
-    <p className="text-lg text-gray-900 dark:text-white font-semibold">
+  <div className="flex flex-col">
+    <span className="text-sm text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+      {label}
+    </span>
+    <span className="text-lg text-gray-900 dark:text-gray-100 font-semibold mt-1">
       {value}
-    </p>
+    </span>
   </div>
 );
 
