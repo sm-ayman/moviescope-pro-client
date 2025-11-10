@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Link, NavLink } from "react-router";
 import logo from "/logo.png";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const Navbar = () => {
+  const { user, signOutUser } = useContext(AuthContext); // <-- get user & logout
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "dark");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -15,6 +17,10 @@ const Navbar = () => {
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
   };
 
+  const handleLogout = () => {
+    signOutUser().catch((err) => console.log(err));
+  };
+
   const navItems = (
     <>
       <li>
@@ -22,7 +28,9 @@ const Navbar = () => {
           to="/"
           end
           className={({ isActive }) =>
-            `text-base ${isActive ? "border-b-2 border-primary font-semibold" : ""}`
+            `text-base ${
+              isActive ? "border-b-2 border-primary font-semibold" : ""
+            }`
           }
         >
           Home
@@ -33,7 +41,9 @@ const Navbar = () => {
           to="/movies"
           end
           className={({ isActive }) =>
-            `text-base ${isActive ? "border-b-2 border-primary font-semibold" : ""}`
+            `text-base ${
+              isActive ? "border-b-2 border-primary font-semibold" : ""
+            }`
           }
         >
           All Movies
@@ -43,7 +53,9 @@ const Navbar = () => {
         <NavLink
           to="/movies/my-collection"
           className={({ isActive }) =>
-            `text-base ${isActive ? "border-b-2 border-primary font-semibold" : ""}`
+            `text-base ${
+              isActive ? "border-b-2 border-primary font-semibold" : ""
+            }`
           }
         >
           My Collection
@@ -82,12 +94,42 @@ const Navbar = () => {
           <span className="absolute h-4 w-4 rounded-full bg-gray-400 shadow top-[0.15rem] left-[0.15rem] transition-all duration-300 peer-checked:translate-x-[1.25rem] peer-checked:bg-white"></span>
         </label>
 
-        <Link to="/login" className="btn btn-outline btn-sm rounded-full px-4">
-          Login
-        </Link>
-        <Link to="/register" className="btn btn-primary btn-sm rounded-full px-4">
-          Register
-        </Link>
+        {/* Auth Buttons */}
+        {user ? (
+          <>
+            {user.photoURL && (
+              <img
+                src={
+                  user.photoURL ||
+                  "https://cdn-icons-png.flaticon.com/512/219/219983.png"
+                }
+                alt="User"
+                className="w-8 h-8 rounded-full"
+              />
+            )}
+            <button
+              onClick={handleLogout}
+              className="btn btn-outline btn-sm rounded-full px-4"
+            >
+              Logout
+            </button>
+          </>
+        ) : (
+          <>
+            <Link
+              to="/login"
+              className="btn btn-outline btn-sm rounded-full px-4"
+            >
+              Login
+            </Link>
+            <Link
+              to="/register"
+              className="btn btn-primary btn-sm rounded-full px-4"
+            >
+              Register
+            </Link>
+          </>
+        )}
       </div>
 
       {/* Mobile menu button */}
@@ -107,7 +149,11 @@ const Navbar = () => {
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth="2"
-              d={mobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
+              d={
+                mobileMenuOpen
+                  ? "M6 18L18 6M6 6l12 12"
+                  : "M4 6h16M4 12h16M4 18h16"
+              }
             />
           </svg>
         </button>
@@ -130,14 +176,41 @@ const Navbar = () => {
               <span className="absolute h-4 w-4 rounded-full bg-gray-400 shadow top-[0.15rem] left-[0.15rem] transition-all duration-300 peer-checked:translate-x-[1.25rem] peer-checked:bg-white"></span>
             </label>
           </div>
+
           {/* Auth buttons */}
           <div className="flex flex-col gap-2 mt-2">
-            <Link to="/login" className="btn btn-outline btn-sm rounded-full px-4">
-              Login
-            </Link>
-            <Link to="/register" className="btn btn-primary btn-sm rounded-full px-4">
-              Register
-            </Link>
+            {user ? (
+              <>
+                {user.photoURL && (
+                  <img
+                    src={user.photoURL}
+                    alt="User"
+                    className="w-8 h-8 rounded-full"
+                  />
+                )}
+                <button
+                  onClick={handleLogout}
+                  className="btn btn-outline btn-sm rounded-full px-4"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="btn btn-outline btn-sm rounded-full px-4"
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/register"
+                  className="btn btn-primary btn-sm rounded-full px-4"
+                >
+                  Register
+                </Link>
+              </>
+            )}
           </div>
         </div>
       )}
