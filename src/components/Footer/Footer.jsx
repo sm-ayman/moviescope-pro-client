@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router";
 import logo from "/logo.png";
 import { FaFacebookF, FaTwitter, FaInstagram, FaYoutube } from "react-icons/fa";
+import { SiX } from "react-icons/si";
 
 const Footer = () => {
   const [email, setEmail] = useState("");
@@ -15,7 +16,6 @@ const Footer = () => {
   return (
     <footer className="bg-base-200 text-base-content py-12 transition-all">
       <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
-
         {/* Logo & Description */}
         <div className="flex flex-col gap-4">
           <Link to="/" className="flex items-center gap-2">
@@ -25,17 +25,27 @@ const Footer = () => {
           </Link>
 
           <p className="text-sm opacity-80">
-            Your ultimate platform for movies. Discover, play, and enjoy the latest films.
+            Your ultimate platform for movies. Discover, play, and enjoy the
+            latest films.
           </p>
 
           <div className="flex gap-4 mt-2 text-xl">
-            <a href="#" className="hover:text-primary transition-colors">
+            <a
+              href="https://www.facebook.com/smayman98/"
+              className="hover:text-primary transition-colors"
+            >
               <FaFacebookF />
             </a>
-            <a href="#" className="hover:text-primary transition-colors">
-              <FaTwitter />
+            <a
+              href="https://x.com/sm__ayman"
+              className="hover:text-primary transition-colors"
+            >
+              <SiX />
             </a>
-            <a href="#" className="hover:text-primary transition-colors">
+            <a
+              href="https://www.instagram.com/sm_ayman"
+              className="hover:text-primary transition-colors"
+            >
               <FaInstagram />
             </a>
             <a href="#" className="hover:text-primary transition-colors">
@@ -47,18 +57,32 @@ const Footer = () => {
         {/* Quick Links */}
         <div className="flex flex-col gap-2">
           <h3 className="font-semibold mb-2">Quick Links</h3>
-          <Link to="/" className="hover:text-primary transition-colors">Home</Link>
-          <Link to="/movies" className="hover:text-primary transition-colors">Movies</Link>
-          <Link to="/about" className="hover:text-primary transition-colors">About</Link>
-          <Link to="/contact" className="hover:text-primary transition-colors">Contact</Link>
+          <Link to="/" className="hover:text-primary transition-colors">
+            Home
+          </Link>
+          <Link to="/movies" className="hover:text-primary transition-colors">
+            Movies
+          </Link>
+          <Link to="/about" className="hover:text-primary transition-colors">
+            About
+          </Link>
+          <Link to="/contact" className="hover:text-primary transition-colors">
+            Contact
+          </Link>
         </div>
 
         {/* Policies */}
         <div className="flex flex-col gap-2">
           <h3 className="font-semibold mb-2">Policies</h3>
-          <Link to="/terms" className="hover:text-primary transition-colors">Terms & Conditions</Link>
-          <Link to="/privacy" className="hover:text-primary transition-colors">Privacy Policy</Link>
-          <Link to="/refund" className="hover:text-primary transition-colors">Refund Policy</Link>
+          <Link to="/terms" className="hover:text-primary transition-colors">
+            Terms & Conditions
+          </Link>
+          <Link to="/privacy" className="hover:text-primary transition-colors">
+            Privacy Policy
+          </Link>
+          <Link to="/refund" className="hover:text-primary transition-colors">
+            Refund Policy
+          </Link>
         </div>
 
         {/* Newsletter */}
@@ -76,10 +100,7 @@ const Footer = () => {
               onChange={(e) => setEmail(e.target.value)}
               className="w-full input input-bordered"
             />
-            <button
-              type="submit"
-              className="btn btn-primary"
-            >
+            <button type="submit" className="btn btn-primary">
               Subscribe
             </button>
           </form>
