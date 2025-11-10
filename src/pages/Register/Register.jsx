@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import { Link, useNavigate } from "react-router";
 import logo from "/logo.png";
 import { FcGoogle } from "react-icons/fc";
-import { auth } from "../../Firebase/firebase.init";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const Register = () => {
   const navigate = useNavigate();
   const [errors, setErrors] = useState("");
+  const { googleSignIn } = use(AuthContext);
 
   useEffect(() => {
     document.title = "Register | Moviescope Pro";
@@ -30,9 +30,8 @@ const Register = () => {
     const photoURL = form.photoURL.value;
     const password = form.password.value;
 
-    console.log("Form submitted:", { name, email, photoURL, password });
-
     setErrors("");
+    console.log("Form submitted:", { name, email, photoURL, password });
 
     if (!validatePassword(password)) {
       setErrors(
@@ -45,18 +44,15 @@ const Register = () => {
   };
 
   // Google login
-  const handleGoogleRegister = async () => {
-    const provider = new GoogleAuthProvider();
-    try {
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-      console.log("Google user:", user);
-      alert(`Google login successful! Welcome, ${user.displayName}`);
-      navigate("/"); // redirect after login
-    } catch (error) {
-      console.error("Google login error:", error);
-      setErrors(error.message);
-    }
+  const handleGoogleRegister = () => {
+    googleSignIn()
+      .then((res) => {
+        console.log("Google login success:", res.user);
+        navigate("/");
+      })
+      .catch((err) => {
+        setErrors(err.message);
+      });
   };
 
   return (
@@ -73,7 +69,7 @@ const Register = () => {
         </div>
 
         {/* Form */}
-        <form className="space-y-5" onSubmit={handleRegister}>
+        <form onSubmit={handleRegister} className="space-y-5">
           {/* Name */}
           <div>
             <label className="label">
@@ -127,12 +123,12 @@ const Register = () => {
               className="input input-bordered w-full rounded-lg"
               required
             />
-            <ul className="mt-2 space-y-1 text-sm text-base-content/50">
+            {/* <ul className="mt-2 space-y-1 text-sm text-base-content/50">
               <li>• Must contain at least one uppercase letter</li>
               <li>• Must contain at least one lowercase letter</li>
               <li>• Must be at least 6 characters long</li>
             </ul>
-            {errors && <p className="text-red-500 text-sm mt-1">{errors}</p>}
+            {errors && <p className="text-red-500 text-sm mt-1">{errors}</p>} */}
           </div>
 
           {/* Register Button */}

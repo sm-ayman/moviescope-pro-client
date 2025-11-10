@@ -3,12 +3,13 @@ import { AuthContext } from "./AuthContext";
 import { auth } from "../Firebase/firebase.init";
 import {
   createUserWithEmailAndPassword,
+  GoogleAuthProvider,
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
 } from "firebase/auth";
-import { GoogleAuthProvider } from "firebase/auth/web-extension";
+
 
 const googleProvider = new GoogleAuthProvider();
 
