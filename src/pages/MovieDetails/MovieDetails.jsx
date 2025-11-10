@@ -1,105 +1,108 @@
-import React, { useEffect, useState, useContext } from "react";
-import { useParams, useNavigate } from "react-router";
+import React, { useEffect, useState, use } from "react";
+import { useParams, Link } from "react-router";
+
+import LoadingSpinner from "../../components/Spinner/LoadingSpinner";
 import { AuthContext } from "../../contexts/AuthContext";
 
 const MovieDetails = () => {
-  const { id } = useParams(); // get movie id from route
-  const navigate = useNavigate();
-  const { user } = useContext(AuthContext); // current logged-in user
+  const { id } = useParams();
+  const { user } = use(AuthContext);
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Fetch movie details
   useEffect(() => {
+    setLoading(true);
     fetch(`http://localhost:5000/movies/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setMovie(data);
         setLoading(false);
       })
-      .catch((err) => console.error("Failed to fetch movie:", err));
+      .catch((err) => {
+        console.error("Failed to fetch movie:", err);
+        setLoading(false);
+      });
   }, [id]);
 
-  const handleDelete = () => {
-    if (window.confirm("Are you sure you want to delete this movie?")) {
-      fetch(`http://localhost:5000/movies/${id}`, {
-        method: "DELETE",
-      })
-        .then((res) => res.json())
-        .then(() => navigate("/all-movies"))
-        .catch((err) => console.error("Failed to delete movie:", err));
-    }
-  };
+  if (loading) {
+    return (
+      <div className="w-full h-screen flex items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );
+  }
 
-  if (loading) return <p className="text-center py-10">Loading...</p>;
-  if (!movie) return <p className="text-center py-10">Movie not found.</p>;
+  if (!movie) {
+    return (
+      <div className="w-full h-screen flex items-center justify-center text-xl text-red-500">
+        Movie not found
+      </div>
+    );
+  }
 
   const isOwner = user?.email === movie.addedBy;
 
   return (
-    <section className="w-full py-16 bg-base-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
-      <div className="max-w-4xl mx-auto px-4">
-        <div className="flex flex-col md:flex-row gap-8 bg-white/5 dark:bg-gray-800 backdrop-blur-md rounded-xl shadow-lg overflow-hidden">
-          {/* Poster */}
-          <img
-            src={movie.posterUrl}
-            alt={movie.title}
-            className="w-full md:w-1/3 h-auto object-cover"
-          />
+    <section className="w-full min-h-screen bg-base-100 dark:bg-gray-900 pb-16">
+      {/* Hero Image */}
+      <div
+        className="w-full h-[60vh] bg-cover bg-center relative"
+        style={{ backgroundImage: `url(${movie.posterUrl})` }}
+      >
+        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+        <div className="absolute inset-0 flex flex-col justify-end px-10 pb-10 text-white">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">{movie.title}</h1>
+          <p className="text-lg opacity-80">
+            {movie.genre} | {movie.releaseYear} | ⭐ {movie.rating}
+          </p>
+        </div>
+      </div>
 
-          {/* Movie Details */}
-          <div className="p-6 flex-1 flex flex-col justify-between">
-            <div>
-              <h1 className="text-3xl font-bold mb-2">{movie.title}</h1>
-              <p className="text-sm text-yellow-400 font-medium mb-2">
-                ⭐ {movie.rating}
-              </p>
-              <p className="mb-1">
-                <strong>Genre:</strong> {movie.genre}
-              </p>
-              <p className="mb-1">
-                <strong>Release Year:</strong> {movie.releaseYear}
-              </p>
-              <p className="mb-1">
-                <strong>Director:</strong> {movie.director}
-              </p>
-              <p className="mb-1">
-                <strong>Cast:</strong> {movie.cast}
-              </p>
-              <p className="mb-1">
-                <strong>Duration:</strong> {movie.duration} mins
-              </p>
-              <p className="mb-1">
-                <strong>Language:</strong> {movie.language}
-              </p>
-              <p className="mb-1">
-                <strong>Country:</strong> {movie.country}
-              </p>
-              <p className="mt-4">{movie.plotSummary}</p>
-            </div>
+      {/* Details */}
+      <div className="max-w-5xl mx-auto px-6 mt-12">
+        <div className="bg-white/10 dark:bg-gray-800 backdrop-blur-md p-6 rounded-xl shadow-lg">
+          <h2 className="text-2xl font-bold text-primary mb-4">
+            Movie Summary
+          </h2>
+          <p className="text-gray-700 dark:text-gray-300 mb-6">
+            {movie.plotSummary}
+          </p>
 
-            {/* Buttons for owner */}
-            {isOwner && (
-              <div className="mt-6 flex gap-4">
-                <button
-                  onClick={() => navigate(`/edit-movie/${movie.id}`)}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={handleDelete}
-                  className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg"
-                >
-                  Delete
-                </button>
-              </div>
-            )}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Detail label="Genre" value={movie.genre} />
+            <Detail label="Release Year" value={movie.releaseYear} />
+            <Detail label="Director" value={movie.director} />
+            <Detail label="Cast" value={movie.cast} />
+            <Detail label="Duration" value={`${movie.duration} mins`} />
+            <Detail label="Language" value={movie.language} />
+            <Detail label="Country" value={movie.country} />
+            <Detail label="Added By" value={movie.addedBy} />
           </div>
+
+          {isOwner && (
+            <div className="flex gap-4 mt-8">
+              <Link
+                to={`/movies/update/${movie._id}`}
+                className="btn btn-primary"
+              >
+                Edit
+              </Link>
+              <button className="btn btn-error">Delete</button>
+            </div>
+          )}
         </div>
       </div>
     </section>
   );
 };
+
+const Detail = ({ label, value }) => (
+  <div>
+    <p className="text-sm text-gray-500 dark:text-gray-400">{label}</p>
+    <p className="text-lg text-gray-900 dark:text-white font-semibold">
+      {value}
+    </p>
+  </div>
+);
 
 export default MovieDetails;

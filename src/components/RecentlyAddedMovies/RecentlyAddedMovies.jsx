@@ -25,7 +25,7 @@ const RecentlyAddedMovies = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {recentMovies.map((movie) => (
             <Link
-              to={`/movie/${movie._id}`}
+              to={`/movies/${movie._id}`}
               key={movie.id}
               className="bg-base-200 rounded-xl overflow-hidden shadow-md hover:shadow-xl hover:scale-105 transition cursor-pointer"
             >

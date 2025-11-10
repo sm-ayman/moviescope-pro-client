@@ -1,17 +1,17 @@
 import React, { use } from "react";
-import { Navigate, Outlet } from "react-router";
+import { Navigate, useLocation } from "react-router";
 import { AuthContext } from "../contexts/AuthContext";
 
-const PrivateRoute = () => {
-  const { user, loading } = use(AuthContext);
+const PrivateRoute = ({ children }) => {
+  const { user } = use(AuthContext);
 
-  // Optionally show a loading spinner while checking auth
-  if (loading) {
-    return <p className="text-center py-10">Loading...</p>;
+  const location = useLocation();
+  console.log(location);
+
+  if (user) {
+    return children;
   }
-
-  // If user exists, render child routes; otherwise redirect to login
-  return user ? <Outlet /> : <Navigate to="/login" replace />;
+  return <Navigate state={location?.pathname} to="/login"></Navigate>;
 };
 
 export default PrivateRoute;

@@ -1,12 +1,22 @@
-import React from "react";
+import React, { use } from "react";
 import Hero from "../../components/Hero/Hero";
 import MovieStatistics from "../../components/MovieStatistics/MovieStatistics";
 import TopRatedMovies from "../../components/TopRatedMovies/TopRatedMovies";
 import About from "../../components/About/About";
 import RecentlyAddedMovies from "../../components/RecentlyAddedMovies/RecentlyAddedMovies";
 import GenreSection from "../../components/GenreSection/GenreSection";
+import { AuthContext } from "../../contexts/AuthContext";
+import LoadingSpinner from "../../components/Spinner/LoadingSpinner";
 
 const Home = () => {
+  const { loading } = use(AuthContext);
+  if (loading) {
+    return (
+      <div className="w-full h-screen flex items-center justify-center">
+        <LoadingSpinner></LoadingSpinner>
+      </div>
+    );
+  }
   return (
     <div>
       <Hero></Hero>
