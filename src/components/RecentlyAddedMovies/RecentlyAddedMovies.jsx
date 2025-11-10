@@ -1,39 +1,20 @@
-import React from "react";
-
-const recentlyAddedMovies = [
-  {
-    id: 1,
-    title: "Dune",
-    poster: "https://m.media-amazon.com/images/I/91EJ7+GQvIL._AC_SY679_.jpg",
-  },
-  {
-    id: 2,
-    title: "No Time to Die",
-    poster: "https://m.media-amazon.com/images/I/81eE1lB4JwL._AC_SY679_.jpg",
-  },
-  {
-    id: 3,
-    title: "Spider-Man: No Way Home",
-    poster: "https://m.media-amazon.com/images/I/71b7LMJvJvL._AC_SY679_.jpg",
-  },
-  {
-    id: 4,
-    title: "The Batman",
-    poster: "https://m.media-amazon.com/images/I/81H1W2z3Y3L._AC_SY679_.jpg",
-  },
-  {
-    id: 5,
-    title: "Doctor Strange in the Multiverse of Madness",
-    poster: "https://m.media-amazon.com/images/I/81B+uFZY+NL._AC_SY679_.jpg",
-  },
-  {
-    id: 6,
-    title: "Thor: Love and Thunder",
-    poster: "https://m.media-amazon.com/images/I/81r+Vhft9rL._AC_SY679_.jpg",
-  },
-];
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router";
 
 const RecentlyAddedMovies = () => {
+  const [recentMovies, setRecentMovies] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:5000/recent-movies")
+      .then((res) => res.json())
+      .then((data) => {
+        setRecentMovies(data);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch recent movies:", err);
+      });
+  }, []);
+
   return (
     <section className="w-full py-16 bg-base-100 text-base-content transition-all">
       <div className="max-w-6xl mx-auto px-4">
@@ -42,8 +23,9 @@ const RecentlyAddedMovies = () => {
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {recentlyAddedMovies.map((movie) => (
-            <div
+          {recentMovies.map((movie) => (
+            <Link
+              to={`/movie/${movie._id}`}
               key={movie.id}
               className="bg-base-200 rounded-xl overflow-hidden shadow-md hover:shadow-xl hover:scale-105 transition cursor-pointer"
             >
@@ -57,7 +39,7 @@ const RecentlyAddedMovies = () => {
                   {movie.title}
                 </h3>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

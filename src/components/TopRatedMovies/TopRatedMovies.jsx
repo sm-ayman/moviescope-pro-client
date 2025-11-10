@@ -1,40 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
 
-const topRatedMovies = [
-  {
-    id: 1,
-    title: "The Shawshank Redemption",
-    rating: 9.3,
-    poster: "https://m.media-amazon.com/images/I/519NBNHX5BL._AC_SY679_.jpg",
-  },
-  {
-    id: 2,
-    title: "The Godfather",
-    rating: 9.2,
-    poster: "https://m.media-amazon.com/images/I/51rOnIjLqzL._AC_.jpg",
-  },
-  {
-    id: 3,
-    title: "The Dark Knight",
-    rating: 9.0,
-    poster: "https://m.media-amazon.com/images/I/51EbJwl0SkL._AC_SY679_.jpg",
-  },
-  {
-    id: 4,
-    title: "Pulp Fiction",
-    rating: 8.9,
-    poster: "https://m.media-amazon.com/images/I/51V5ZpFyaFL._AC_.jpg",
-  },
-  {
-    id: 5,
-    title: "Forrest Gump",
-    rating: 8.8,
-    poster: "https://m.media-amazon.com/images/I/519NBNHX5BL._AC_SY679_.jpg",
-  },
-];
-
 const TopRatedMovies = () => {
+  const [topRatedMovies, setTopRatedMovies] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:5000/top-rated-movies")
+      .then((res) => res.json())
+      .then((data) => {
+        setTopRatedMovies(data);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch recent movies:", err);
+      });
+  }, []);
   return (
     <section className="w-full py-16 bg-base-100 dark:bg-gray-900 transition-colors duration-300">
       <div className="max-w-6xl mx-auto px-4">
