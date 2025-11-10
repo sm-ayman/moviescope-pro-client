@@ -1,9 +1,19 @@
-import React from "react";
-import { Link } from "react-router";
+import React, { use } from "react";
+import { Link, useLocation, useNavigate } from "react-router";
 import logo from "/logo.png";
 import { FcGoogle } from "react-icons/fc";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const Login = () => {
+  const { signInUser, signInWithGoogle } = use(AuthContext);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogin = (e) => {
+    e.preventdefault();
+    
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
       <div className="bg-base-200/40 backdrop-blur-xl shadow-xl rounded-xl p-8 w-full max-w-md border border-base-300">
@@ -18,7 +28,7 @@ const Login = () => {
         </div>
 
         {/* Form */}
-        <form className="space-y-5">
+        <form onSubmit={handleLogin} className="space-y-5">
           {/* Email */}
           <div>
             <label className="label">

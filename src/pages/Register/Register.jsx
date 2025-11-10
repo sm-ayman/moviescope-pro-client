@@ -7,7 +7,7 @@ import { AuthContext } from "../../contexts/AuthContext";
 const Register = () => {
   const navigate = useNavigate();
   const [errors, setErrors] = useState("");
-  const { googleSignIn } = use(AuthContext);
+  const { googleSignIn, createUser, user, setUser } = use(AuthContext);
 
   useEffect(() => {
     document.title = "Register | Moviescope Pro";
@@ -32,6 +32,23 @@ const Register = () => {
 
     setErrors("");
     console.log("Form submitted:", { name, email, photoURL, password });
+
+    createUser(email, password)
+      .then((res) => {
+        const newUser = res.user;
+        const userData = {
+          uid: newUser.uid,
+          email: newUser.email,
+          displayName: name,
+          photoURL:
+            photoURL || "https://cdn-icons-png.flaticon.com/512/219/219983.png",
+        };
+        setUser(userData);
+        console.log(user);
+      })
+      .catch((err) => {
+        console.log("Registration Error", err);
+      });
 
     if (!validatePassword(password)) {
       setErrors(
@@ -123,12 +140,12 @@ const Register = () => {
               className="input input-bordered w-full rounded-lg"
               required
             />
-            {/* <ul className="mt-2 space-y-1 text-sm text-base-content/50">
+            <ul className="mt-2 space-y-1 text-sm text-base-content/50">
               <li>• Must contain at least one uppercase letter</li>
               <li>• Must contain at least one lowercase letter</li>
               <li>• Must be at least 6 characters long</li>
             </ul>
-            {errors && <p className="text-red-500 text-sm mt-1">{errors}</p>} */}
+            {errors && <p className="text-red-500 text-sm mt-1">{errors}</p>}
           </div>
 
           {/* Register Button */}

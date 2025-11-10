@@ -10,7 +10,6 @@ import {
   signOut,
 } from "firebase/auth";
 
-
 const googleProvider = new GoogleAuthProvider();
 
 const AuthProvider = ({ children }) => {
@@ -59,6 +58,7 @@ const AuthProvider = ({ children }) => {
     googleSignIn,
     signInUser,
     signOutUser,
+    setUser,
   };
   return <AuthContext value={authInfo}>{children}</AuthContext>;
 };
