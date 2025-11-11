@@ -71,7 +71,7 @@ const Hero = () => {
                     transition={{ delay: 0.5, duration: 0.6 }}
                     className="text-sm md:text-lg mb-4 w-11/12 md:w-1/2"
                   >
-                    {movie.summary?.slice(0, 150) || "No description available"}
+                    {movie.plotSummary?.slice(0, 150) || "No description available"}
                   </motion.p>
 
                   <motion.a
