@@ -1,4 +1,4 @@
-import React, { use } from "react";
+import React, { use, useEffect } from "react";
 import Hero from "../../components/Hero/Hero";
 import MovieStatistics from "../../components/MovieStatistics/MovieStatistics";
 import TopRatedMovies from "../../components/TopRatedMovies/TopRatedMovies";
@@ -10,6 +10,11 @@ import LoadingSpinner from "../../components/Spinner/LoadingSpinner";
 
 const Home = () => {
   const { loading } = use(AuthContext);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   if (loading) {
     return (
       <div className="w-full h-screen flex items-center justify-center">
@@ -17,6 +22,7 @@ const Home = () => {
       </div>
     );
   }
+
   return (
     <div>
       <Hero></Hero>

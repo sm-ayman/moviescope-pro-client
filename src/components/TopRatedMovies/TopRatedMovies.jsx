@@ -9,9 +9,7 @@ const TopRatedMovies = () => {
     fetch("http://localhost:5000/top-rated-movies")
       .then((res) => res.json())
       .then((data) => {
-        setTopRatedMovies(
-          data.sort((a, b) => Number(b.rating) - Number(a.rating))
-        );
+        setTopRatedMovies(data);
       })
       .catch((err) => {
         console.error("Failed to fetch recent movies:", err);
