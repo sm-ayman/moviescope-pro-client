@@ -9,7 +9,9 @@ const TopRatedMovies = () => {
     fetch("http://localhost:5000/top-rated-movies")
       .then((res) => res.json())
       .then((data) => {
-        setTopRatedMovies(data);
+        setTopRatedMovies(
+          data.sort((a, b) => Number(b.rating) - Number(a.rating))
+        );
       })
       .catch((err) => {
         console.error("Failed to fetch recent movies:", err);
@@ -26,7 +28,7 @@ const TopRatedMovies = () => {
           {topRatedMovies.map((movie) => (
             <Link
               to={`/movies/${movie._id}`}
-              key={movie.id}
+              key={movie._id}
               className="bg-white/5 dark:bg-gray-800 backdrop-blur-md rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition cursor-pointer"
             >
               <img

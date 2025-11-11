@@ -64,6 +64,14 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
+      {
+        path: "/add-movie",
+        element: (
+          <PrivateRoute>
+            <AddMovie></AddMovie>
+          </PrivateRoute>
+        ),
+      },
       { path: "/login", element: <Login /> },
       { path: "/register", element: <Register /> },
       { path: "*", element: <Error404 /> },
