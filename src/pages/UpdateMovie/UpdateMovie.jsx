@@ -4,7 +4,7 @@ import LoadingSpinner from "../../components/Spinner/LoadingSpinner";
 
 const UpdateMovie = () => {
   const { id } = useParams();
-  console.log(id)
+  console.log(id);
   const navigate = useNavigate();
 
   const [movie, setMovie] = useState(null);
@@ -56,7 +56,6 @@ const UpdateMovie = () => {
       });
   };
 
-  // ✅ Show spinner while loading movie
   if (loading || !movie) {
     return (
       <div className="w-full h-screen flex items-center justify-center">
@@ -82,7 +81,7 @@ const UpdateMovie = () => {
               <label className="font-semibold">Title</label>
               <input
                 name="title"
-                defaultValue={movie.title} // ✅ Prefilled
+                defaultValue={movie.title}
                 required
                 className="input input-bordered w-full mt-1"
               />
@@ -92,7 +91,7 @@ const UpdateMovie = () => {
               <label className="font-semibold">Genre</label>
               <input
                 name="genre"
-                defaultValue={movie.genre} // ✅ Prefilled
+                defaultValue={movie.genre}
                 required
                 className="input input-bordered w-full mt-1"
               />

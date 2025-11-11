@@ -1,5 +1,5 @@
 import React, { useEffect, useState, use } from "react";
-import { useParams, Link } from "react-router";
+import { useParams, Link, useNavigate } from "react-router";
 import { motion } from "framer-motion";
 import LoadingSpinner from "../../components/Spinner/LoadingSpinner";
 import { AuthContext } from "../../contexts/AuthContext";
@@ -9,7 +9,8 @@ const MovieDetails = () => {
   const { user } = use(AuthContext);
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const navigate = useNavigate();
+  
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [id]);
@@ -45,6 +46,19 @@ const MovieDetails = () => {
   }
 
   const isOwner = user?.email === movie.addedBy;
+
+  const handleDelete = (id) => {
+    if (!window.confirm("Are you sure you want to delete this movie?")) return;
+
+    fetch(`http://localhost:5000/movies/${id}`, {
+      method: "DELETE",
+    })
+      .then((res) => res.json())
+      .then(() => {
+        navigate("/my-collection"); // ✅ redirect after delete
+      })
+      .catch((err) => console.error("Failed to delete movie:", err));
+  };
 
   return (
     <section className="w-full min-h-screen bg-base-100 dark:bg-gray-900 pb-16 transition-colors">
@@ -138,7 +152,13 @@ const MovieDetails = () => {
                 Edit
               </Link>
 
-              <button className="px-5 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDelete(movie._id);
+                }}
+                className="px-5 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+              >
                 Delete
               </button>
             </motion.div>

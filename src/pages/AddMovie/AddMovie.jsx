@@ -215,7 +215,7 @@ const AddMovie = () => {
           />
         </div>
 
-        {/* Added By (Auto-filled & Readonly) */}
+        {/* Added By */}
         <div>
           <label className="font-semibold">Added By</label>
           <input
@@ -223,7 +223,7 @@ const AddMovie = () => {
             name="addedBy"
             value={email}
             readOnly
-            className="input input-bordered w-full mt-1 bg-gray-200 dark:bg-gray-800 cursor-not-allowed"
+            className="input input-bordered w-full mt-1 light:bg-gray-200 dark:bg-gray-800 cursor-not-allowed"
           />
         </div>
 
