@@ -73,7 +73,8 @@ const MyCollection = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {myMovies.map((movie) => (
-              <div
+              <Link
+                to={`/movies/${movie._id}`}
                 key={movie._id}
                 className="bg-white/5 dark:bg-gray-800 backdrop-blur-md rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition transform hover:scale-105 flex flex-col"
               >
@@ -109,7 +110,7 @@ const MyCollection = () => {
                     </button>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         )}
