@@ -1,9 +1,11 @@
 import React from "react";
-import { Link } from "react-router";
+import { useNavigate } from "react-router";
 import { motion } from "framer-motion";
 import logo from "/logo.png";
 
 const Error404 = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-base-100 text-base-content px-4">
       {/* Logo */}
@@ -44,14 +46,14 @@ const Error404 = () => {
         changed, or is temporarily unavailable.
       </motion.p>
 
-      {/* Button with hover animation */}
+      {/* Go Back Button */}
       <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
-        <Link
-          to="/"
+        <button
+          onClick={() => navigate(-1)}
           className="px-6 py-3 bg-primary text-white rounded-full font-semibold hover:bg-primary/90 transition"
         >
-          Go Back Home
-        </Link>
+          Go Back
+        </button>
       </motion.div>
     </div>
   );

@@ -2,6 +2,7 @@ import React, { useEffect, useState, use } from "react";
 import { Link } from "react-router";
 import LoadingSpinner from "../../components/Spinner/LoadingSpinner";
 import { AuthContext } from "../../contexts/AuthContext";
+import { FaPlus } from "react-icons/fa";
 
 const MyCollection = () => {
   const { user, loading } = use(AuthContext);
@@ -56,7 +57,15 @@ const MyCollection = () => {
         <h2 className="text-2xl md:text-3xl font-bold text-primary mb-10 text-center">
           My Collection
         </h2>
-
+        <div className="flex justify-end mb-8">
+          <Link
+            to="/add-movie"
+            className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg shadow-md hover:bg-primary/80 transition"
+          >
+            <FaPlus />
+            Add Movie
+          </Link>
+        </div>
         {myMovies.length === 0 ? (
           <p className="text-center text-gray-700 dark:text-gray-300">
             You have not added any movies yet.
