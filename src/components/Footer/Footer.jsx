@@ -109,7 +109,15 @@ const Footer = () => {
 
       {/* Footer Bottom */}
       <div className="mt-8 border-t border-base-300 pt-4 text-center text-sm opacity-80">
-        &copy; {new Date().getFullYear()} Moviescope Pro. All rights reserved.
+        &copy; {new Date().getFullYear()} Moviescope Pro. All rights reserved. |
+        Developed by{" "}
+        <Link
+          to="https://sm-ayman.netlify.app/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          sm-ayman
+        </Link>
       </div>
     </footer>
   );

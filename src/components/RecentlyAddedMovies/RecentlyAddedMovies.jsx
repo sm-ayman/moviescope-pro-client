@@ -22,7 +22,7 @@ const RecentlyAddedMovies = () => {
           Recently Added Movies
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
           {recentMovies.map((movie) => (
             <Link
               to={`/movies/${movie._id}`}
@@ -32,7 +32,7 @@ const RecentlyAddedMovies = () => {
               <img
                 src={movie.posterUrl}
                 alt={movie.title}
-                className="w-full h-64 object-cover"
+                className="w-full h-72 object-cover"
               />
               <div className="p-4 text-center">
                 <h3 className="text-lg md:text-xl font-semibold">

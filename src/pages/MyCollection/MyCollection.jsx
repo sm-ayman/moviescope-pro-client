@@ -8,8 +8,10 @@ const MyCollection = () => {
   const { user, loading } = use(AuthContext);
   const [myMovies, setMyMovies] = useState([]);
 
+  // Fetch movies added by the logged-in user
   useEffect(() => {
     if (!user) return;
+
     fetch(
       `http://localhost:5000/movies?addedBy=${encodeURIComponent(user.email)}`
     )
@@ -22,6 +24,7 @@ const MyCollection = () => {
       });
   }, [user]);
 
+  // Delete a movie
   const handleDelete = (id) => {
     if (!window.confirm("Are you sure you want to delete this movie?")) return;
 
@@ -30,6 +33,7 @@ const MyCollection = () => {
     })
       .then((res) => res.json())
       .then(() => {
+        // Remove deleted movie from state to update UI immediately
         setMyMovies((prev) => prev.filter((movie) => movie._id !== id));
       })
       .catch((err) => console.error("Failed to delete movie:", err));
@@ -57,6 +61,7 @@ const MyCollection = () => {
         <h2 className="text-2xl md:text-3xl font-bold text-primary mb-10 text-center">
           My Collection
         </h2>
+
         <div className="flex justify-end mb-8">
           <Link
             to="/add-movie"
@@ -66,6 +71,7 @@ const MyCollection = () => {
             Add Movie
           </Link>
         </div>
+
         {myMovies.length === 0 ? (
           <p className="text-center text-gray-700 dark:text-gray-300">
             You have not added any movies yet.
@@ -73,10 +79,9 @@ const MyCollection = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {myMovies.map((movie) => (
-              <Link
-                to={`/movies/${movie._id}`}
+              <div
                 key={movie._id}
-                className="bg-white/5 dark:bg-gray-800 backdrop-blur-md rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition transform hover:scale-105 flex flex-col"
+                className="bg-white/5 dark:bg-gray-800 backdrop-blur-md rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition transform hover:scale-105 flex flex-col relative"
               >
                 <img
                   src={movie.posterUrl}
@@ -95,22 +100,33 @@ const MyCollection = () => {
                       ⭐ {movie.rating}
                     </p>
                   </div>
+
                   <div className="flex gap-2 mt-4">
                     <Link
                       to={`/movies/update/${movie._id}`}
-                      className="flex-1 px-3 py-2 bg-primary text-white rounded-lg text-center hover:bg-primary/80 transition"
+                      className="flex-1 px-3 py-2 bg-success text-white rounded-lg text-center hover:bg-primary/80 transition"
+                      onClick={(e) => e.stopPropagation()}
                     >
                       Edit
                     </Link>
                     <button
-                      onClick={() => handleDelete(movie._id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(movie._id);
+                      }}
                       className="flex-1 px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
                     >
                       Delete
                     </button>
                   </div>
+                  <Link
+                    to={`/movies/${movie._id}`}
+                    className="mt-4 inline-block px-4 py-2 text-white dark:text-white bg-primary rounded-lg hover:bg-primary/90 dark:hover:bg-primary/80 text-center transition"
+                  >
+                    Details
+                  </Link>
                 </div>
-              </Link>
+              </div>
             ))}
           </div>
         )}
