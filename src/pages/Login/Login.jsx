@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router";
 import logo from "/logo.png";
 import { FcGoogle } from "react-icons/fc";
 import { AuthContext } from "../../contexts/AuthContext";
+import { toast, ToastContainer } from "react-toastify";
 
 const Login = () => {
   useEffect(() => {
@@ -25,10 +26,14 @@ const Login = () => {
       .then((res) => {
         console.log("User logged in:", res.user);
         e.target.reset();
-        navigate(location.state?.from || "/");
+        toast.success("✅ Logged in successfully!");
+        setTimeout(() => {
+          navigate(location.state?.from || "/");
+        }, 500);
       })
       .catch((err) => {
         console.log("Login error:", err.message);
+        toast.error(`❌ Login failed: ${err.message}`);
       });
   };
 
@@ -37,7 +42,11 @@ const Login = () => {
     googleSignIn()
       .then((res) => {
         console.log("Google login response: ", res);
-        navigate(location.state?.from || "/movies");
+
+        toast.success("✅ Logged in successfully!");
+        setTimeout(() => {
+          navigate(location.state?.from || "/movies");
+        }, 500);
       })
       .catch((err) => console.log("Google login error:", err));
   };
@@ -45,6 +54,16 @@ const Login = () => {
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
       <div className="bg-base-200/40 backdrop-blur-xl shadow-xl rounded-xl p-8 w-full max-w-md border border-base-300">
+        {/* login-error-toast */}
+        <ToastContainer
+          position="top-center"
+          autoClose={4000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          pauseOnHover
+          theme="colored"
+        />
         {/* Logo + Title */}
         <div className="text-center mb-8">
           <Link to="/" className="flex items-center justify-center gap-2">
