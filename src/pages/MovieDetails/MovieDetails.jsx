@@ -48,9 +48,8 @@ const MovieDetails = () => {
   const isOwner = user?.email === movie.addedBy;
 
   const handleDelete = (id) => {
-    if (!window.confirm("Are you sure you want to delete this movie?")) return;
 
-    fetch(`http://localhost:5000/movies/${id}`, {
+    fetch(`https://moviescope-pro-server.vercel.app/movies/${id}`, {
       method: "DELETE",
     })
       .then((res) => res.json())

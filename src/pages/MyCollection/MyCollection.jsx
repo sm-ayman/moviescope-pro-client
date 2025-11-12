@@ -4,7 +4,7 @@ import LoadingSpinner from "../../components/Spinner/LoadingSpinner";
 import { AuthContext } from "../../contexts/AuthContext";
 import { FaPlus } from "react-icons/fa";
 import Swal from "sweetalert2";
-import { motion } from "framer-motion"; // <-- import motion
+import { motion } from "framer-motion";
 
 const MyCollection = () => {
   const { user, loading } = use(AuthContext);
