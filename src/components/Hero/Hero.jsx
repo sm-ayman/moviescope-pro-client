@@ -7,7 +7,7 @@ const Hero = () => {
 
   // fetch top 3 movies
   useEffect(() => {
-    fetch("http://localhost:5000/movies")
+    fetch("https://moviescope-pro-server.vercel.app/movies")
       .then((res) => res.json())
       .then((data) => {
         const topThree = [...data]

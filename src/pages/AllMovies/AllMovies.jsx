@@ -11,7 +11,7 @@ const AllMovies = () => {
   const { loading } = useContext(AuthContext);
 
   useEffect(() => {
-    fetch("http://localhost:5000/movies")
+    fetch("https://moviescope-pro-server.vercel.app/movies")
       .then((res) => res.json())
       .then((data) => setAllMovies(data))
       .catch((err) => console.error("Failed to fetch movies:", err));

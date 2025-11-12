@@ -57,16 +57,25 @@ const Register = () => {
       setUser(userData);
 
       // Save user in your backend
-      const backendRes = await fetch("http://localhost:5000/users", {
+      fetch("https://moviescope-pro-server.vercel.app/users", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(userData),
-      });
-
-      if (!backendRes.ok) throw new Error("Failed to save user in DB");
-
-      const data = await backendRes.json();
-      console.log("User saved in DB:", data);
+      })
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error("Failed to save user in DB");
+          }
+          return res.json();
+        })
+        .then((data) => {
+          console.log("User saved in DB:", data);
+        })
+        .catch((error) => {
+          console.error("Error saving user:", error);
+        });
 
       // 4. Navigate to home
       navigate("/");
@@ -103,8 +112,8 @@ const Register = () => {
           console.error("Failed to save user to backend:", err);
         }
 
-        setUser(userData); 
-        navigate("/"); 
+        setUser(userData);
+        navigate("/");
       })
       .catch((err) => {
         setErrors(err.message);

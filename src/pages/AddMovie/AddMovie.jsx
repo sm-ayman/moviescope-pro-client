@@ -34,7 +34,7 @@ const AddMovie = () => {
     e.preventDefault();
     console.log("Movie Added:", movieData);
 
-    fetch("http://localhost:5000/movies", {
+    fetch("https://moviescope-pro-server.vercel.app/movies", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify(movieData),

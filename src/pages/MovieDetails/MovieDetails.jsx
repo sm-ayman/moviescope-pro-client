@@ -17,7 +17,7 @@ const MovieDetails = () => {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`http://localhost:5000/movies/${id}`)
+    fetch(`https://moviescope-pro-server.vercel.app/movies/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setMovie(data);

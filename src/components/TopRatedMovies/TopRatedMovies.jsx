@@ -6,7 +6,7 @@ const TopRatedMovies = () => {
   const [topRatedMovies, setTopRatedMovies] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/top-rated-movies")
+    fetch("https://moviescope-pro-server.vercel.app/top-rated-movies")
       .then((res) => res.json())
       .then((data) => {
         setTopRatedMovies(data);

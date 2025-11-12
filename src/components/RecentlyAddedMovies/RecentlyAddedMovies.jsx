@@ -5,7 +5,7 @@ const RecentlyAddedMovies = () => {
   const [recentMovies, setRecentMovies] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/recent-movies")
+    fetch("https://moviescope-pro-server.vercel.app/recent-movies")
       .then((res) => res.json())
       .then((data) => {
         setRecentMovies(data);
@@ -26,7 +26,7 @@ const RecentlyAddedMovies = () => {
           {recentMovies.map((movie) => (
             <Link
               to={`/movies/${movie._id}`}
-              key={movie.id}
+              key={movie._id}
               className="bg-base-200 rounded-xl overflow-hidden shadow-md hover:shadow-xl hover:scale-105 transition cursor-pointer"
             >
               <img

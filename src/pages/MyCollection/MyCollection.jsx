@@ -38,7 +38,7 @@ const MyCollection = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://localhost:5000/movies/${id}`, {
+        fetch(`https://moviescope-pro-server.vercel.app/movies/${id}`, {
           method: "DELETE",
         })
           .then((res) => res.json())

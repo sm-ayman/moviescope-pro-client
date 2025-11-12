@@ -12,8 +12,10 @@ const Home = () => {
   const { loading } = use(AuthContext);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+    if (!loading) {
+      window.scrollTo(0, 0);
+    }
+  }, [loading]);
 
   if (loading) {
     return (
