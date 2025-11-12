@@ -1,6 +1,6 @@
 # Moviescope Pro
 
-[Live Site](https://moviescope-pro.com)  
+[Live Site](https://moviescope-pro.netlify.app/)  
 
 Moviescope Pro is a modern movie web application where users can explore, track, and manage movies. It provides a smooth, interactive experience for movie enthusiasts with features like top-rated movies, watchlists, and personalized collections.
 
@@ -16,24 +16,6 @@ Moviescope Pro is a modern movie web application where users can explore, track,
 
 ---
 
-## Screenshots
-
-### Home Page
-![Home Page](./screenshots/home.png)
-
-### Top Rated Movies Section
-![Top Rated Movies](./screenshots/top-rated.png)
-
-### Movie Details Page
-![Movie Details](./screenshots/movie-details.png)
-
-### User Watchlist
-![Watchlist](./screenshots/watchlist.png)
-
-### Dark Mode
-![Dark Mode](./screenshots/dark-mode.png)
-
-
 ---
 
 ## Technology Stack
@@ -46,4 +28,12 @@ Moviescope Pro is a modern movie web application where users can explore, track,
 
 ## Live Demo
 
-Check the live website here: [Moviescope Pro](https://moviescope-pro.com)
+Check the live website here: [Moviescope Pro](https://moviescope-pro.netlify.app/)
+
+
+- **Name:** Sultan Md. Ayman  
+- **Email:** sultanmdayman@gmail.com  
+- **GitHub:** [https://github.com/sm-ayman](https://github.com/sm-ayman)  
+- **LinkedIn:** [https://www.linkedin.com/in/sultan-md-ayman/](https://www.linkedin.com/in/sultan-md-ayman/)  
+
+Feel free to reach out for collaboration, feedback, or project inquiries.
