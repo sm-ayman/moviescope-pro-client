@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import LoadingSpinner from "../../components/Spinner/LoadingSpinner";
 import { AuthContext } from "../../contexts/AuthContext";
 import { FaPlus } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 const MyCollection = () => {
   const { user, loading } = use(AuthContext);
@@ -25,18 +26,29 @@ const MyCollection = () => {
   }, [user]);
 
   // Delete a movie
-  const handleDelete = (id) => {
-    if (!window.confirm("Are you sure you want to delete this movie?")) return;
 
-    fetch(`http://localhost:5000/movies/${id}`, {
-      method: "DELETE",
-    })
-      .then((res) => res.json())
-      .then(() => {
-        // Remove deleted movie from state to update UI immediately
-        setMyMovies((prev) => prev.filter((movie) => movie._id !== id));
-      })
-      .catch((err) => console.error("Failed to delete movie:", err));
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        fetch(`http://localhost:5000/movies/${id}`, {
+          method: "DELETE",
+        })
+          .then((res) => res.json())
+          .then(() => {
+            Swal.fire("Deleted!", "Your movie has been deleted.", "success");
+            setMyMovies((prev) => prev.filter((movie) => movie._id !== id));
+          })
+          .catch((err) => console.error("Failed to delete movie:", err));
+      }
+    });
   };
 
   if (!user) {
