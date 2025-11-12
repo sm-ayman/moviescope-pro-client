@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router";
 import LoadingSpinner from "../../components/Spinner/LoadingSpinner";
+import { toast, ToastContainer } from "react-toastify";
 
 const UpdateMovie = () => {
   const { id } = useParams();
@@ -48,7 +49,9 @@ const UpdateMovie = () => {
       .then((res) => res.json())
       .then(() => {
         setUpdating(false);
-        navigate(`/movies/${id}`);
+        toast.success("🎬 Movie Updated successfully!");
+
+        setTimeout(() => navigate(`/movies/${id}`), 1500);
       })
       .catch((err) => {
         console.error("Update failed:", err);
@@ -70,7 +73,16 @@ const UpdateMovie = () => {
         <h2 className="text-3xl font-bold text-primary mb-10 text-center">
           Update Movie
         </h2>
-
+        {/* movie-updated-toast */}
+        <ToastContainer
+          position="top-center"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          pauseOnHover
+          theme="colored"
+        />
         <form
           onSubmit={handleUpdate}
           className="bg-white/5 dark:bg-gray-800 backdrop-blur-md p-6 rounded-xl shadow-lg space-y-4"

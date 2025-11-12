@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { AuthContext } from "../../contexts/AuthContext";
 import { use } from "react";
 import { useNavigate } from "react-router";
+import { toast, ToastContainer } from "react-toastify";
 
 const AddMovie = () => {
   const { user } = use(AuthContext);
@@ -41,12 +42,12 @@ const AddMovie = () => {
       .then((res) => res.json())
       .then((data) => {
         console.log("Movie Added: ", data);
-        navigate("/my-collection");
-        alert("Movie added successfully!");
+        toast.success("🎬 Movie added successfully!");
+        setTimeout(() => navigate("/my-collection"), 1500);
       })
       .catch((err) => {
         console.error("Failed to add movie:", err);
-        alert("Failed to add movie");
+        toast.error("❌ Failed to add movie");
       });
   };
 
@@ -65,7 +66,16 @@ const AddMovie = () => {
       >
         Add a New Movie
       </motion.h2>
-
+      {/* movie-added-toast */}
+      <ToastContainer
+        position="top-center"
+        autoClose={4000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        pauseOnHover
+        theme="colored"
+      />
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Title */}
         <div>
