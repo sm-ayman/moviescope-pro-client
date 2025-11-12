@@ -70,7 +70,11 @@ const Navbar = () => {
       <div className="navbar-start flex items-center gap-2">
         <Link to="/" className="flex items-center gap-2">
           <span className="text-2xl font-bold text-primary">Moviescope</span>
-          <img src={logo} alt="logo" className="w-10" />
+          <img
+            src={logo}
+            alt="logo"
+            className="w-10 hover:scale-120 duration-300 hover:rotate-45"
+          />
           <span className="text-2xl font-semibold">Pro</span>
         </Link>
       </div>

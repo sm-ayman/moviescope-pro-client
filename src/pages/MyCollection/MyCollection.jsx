@@ -4,17 +4,21 @@ import LoadingSpinner from "../../components/Spinner/LoadingSpinner";
 import { AuthContext } from "../../contexts/AuthContext";
 import { FaPlus } from "react-icons/fa";
 import Swal from "sweetalert2";
+import { motion } from "framer-motion"; // <-- import motion
 
 const MyCollection = () => {
   const { user, loading } = use(AuthContext);
   const [myMovies, setMyMovies] = useState([]);
+
 
   // Fetch movies added by the logged-in user
   useEffect(() => {
     if (!user) return;
 
     fetch(
-      `http://localhost:5000/movies?addedBy=${encodeURIComponent(user.email)}`
+      `https://moviescope-pro-server.vercel.app/movies?addedBy=${encodeURIComponent(
+        user.email
+      )}`
     )
       .then((res) => res.json())
       .then((data) => {
@@ -24,8 +28,6 @@ const MyCollection = () => {
         console.error("Failed to fetch user movies:", err);
       });
   }, [user]);
-
-  // Delete a movie
 
   const handleDelete = (id) => {
     Swal.fire({
@@ -90,9 +92,12 @@ const MyCollection = () => {
           </p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {myMovies.map((movie) => (
-              <div
+            {myMovies.map((movie, index) => (
+              <motion.div
                 key={movie._id}
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1, duration: 0.5 }}
                 className="bg-white/5 dark:bg-gray-800 backdrop-blur-md rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition transform hover:scale-105 flex flex-col relative"
               >
                 <img
@@ -138,7 +143,7 @@ const MyCollection = () => {
                     Details
                   </Link>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         )}

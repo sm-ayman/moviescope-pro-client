@@ -13,7 +13,7 @@ const UpdateMovie = () => {
   const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/movies/${id}`)
+    fetch(`https://moviescope-pro-server.vercel.app/movies/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setMovie(data);
@@ -41,7 +41,7 @@ const UpdateMovie = () => {
       country: form.country.value,
     };
 
-    fetch(`http://localhost:5000/movies/${id}`, {
+    fetch(`https://moviescope-pro-server.vercel.app/movies/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(updatedMovie),

@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import LoadingSpinner from "../../components/Spinner/LoadingSpinner";
 import { AuthContext } from "../../contexts/AuthContext";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { motion } from "framer-motion";
 
 const AllMovies = () => {
   const [allMovies, setAllMovies] = useState([]);
@@ -50,7 +51,7 @@ const AllMovies = () => {
   return (
     <section className="w-full py-16 bg-base-100 dark:bg-gray-900 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4">
-        {/* ✅ Search Bar */}
+        {/* Search Bar */}
         <div className="mb-10 flex justify-center">
           <input
             type="text"
@@ -65,13 +66,30 @@ const AllMovies = () => {
           All Movies
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: {},
+            visible: {
+              transition: {
+                staggerChildren: 0.1,
+              },
+            },
+          }}
+        >
           {filteredMovies.map((movie) => (
-            <div
+            <motion.div
               key={movie._id}
-              className="relative bg-white/5 dark:bg-gray-800 backdrop-blur-md rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition transform hover:scale-105 cursor-pointer flex flex-col"
+              className="relative bg-white/5 dark:bg-gray-800 backdrop-blur-md rounded-xl overflow-hidden shadow-lg cursor-pointer flex flex-col"
+              variants={{
+                hidden: { opacity: 0, y: 30 },
+                visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 120 } },
+              }}
+              whileHover={{ scale: 1.05 }}
             >
-              {/* ✅ Heart Icon */}
+              {/* Heart Icon */}
               <button
                 onClick={() => toggleWatchlist(movie)}
                 className="absolute top-3 right-3 text-white text-2xl hover:scale-110 transition"
@@ -108,9 +126,9 @@ const AllMovies = () => {
                   Details
                 </Link>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         {filteredMovies.length === 0 && (
           <p className="text-center text-gray-500 dark:text-gray-300 mt-10 text-lg">

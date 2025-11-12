@@ -45,7 +45,7 @@ const Login = () => {
 
         toast.success("✅ Logged in successfully!");
         setTimeout(() => {
-          navigate(location.state?.from || "/movies");
+          navigate(location.state?.from || "/");
         }, 500);
       })
       .catch((err) => console.log("Google login error:", err));
