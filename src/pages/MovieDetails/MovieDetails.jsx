@@ -54,7 +54,7 @@ const MovieDetails = () => {
     })
       .then((res) => res.json())
       .then(() => {
-        navigate("/my-collection"); // ✅ redirect after delete
+        navigate("/my-collection"); 
       })
       .catch((err) => console.error("Failed to delete movie:", err));
   };

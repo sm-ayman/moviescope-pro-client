@@ -16,6 +16,33 @@ Moviescope Pro is a modern movie web application where users can explore, track,
 
 ---
 
+## Screenshots
+
+### Home Page
+![Home Page](./public/home.png)
+
+### User Icon Dropdown
+![Dropdown Menus](./public/dropdown.png)
+
+### Top Rated Movies Section
+![Top Rated Movies](./public/top-rated.png)
+
+### All Movies
+![All Movie](./public/all-movies.png)
+
+### Search Movies
+![Search Movie](./public/search.png)
+
+### Movie Details Page
+![Movie Details](./public/movie-details.png)
+
+### User Watchlist
+![Watchlist](./public/watch-list.png)
+
+### User Collection
+![User Collection](./public/my-collection.png)
+
+
 ---
 
 ## Technology Stack
