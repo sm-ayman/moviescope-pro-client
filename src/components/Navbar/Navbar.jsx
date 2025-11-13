@@ -3,6 +3,7 @@ import { Link, NavLink } from "react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import logo from "/logo.png";
 import { AuthContext } from "../../contexts/AuthContext";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
   const { user, signOutUser } = use(AuthContext);
@@ -28,8 +29,25 @@ const Navbar = () => {
 
   const toggleTheme = () =>
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
+
   const handleLogout = () => {
-    signOutUser().catch((err) => console.log(err));
+    signOutUser()
+      .then(() => {
+        toast.success("Logged out successfully!", {
+          position: "top-right",
+          autoClose: 3000,
+          theme: "colored",
+        });
+      })
+      .catch((err) => {
+        console.error(err);
+        toast.error("Logout failed. Please try again.", {
+          position: "top-right",
+          autoClose: 3000,
+          theme: "colored",
+        });
+      });
+
     setUserDropdownOpen(false);
   };
 

@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router";
 import logo from "/logo.png";
 import { FcGoogle } from "react-icons/fc";
 import { AuthContext } from "../../contexts/AuthContext";
+import { toast } from "react-toastify";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -90,7 +91,7 @@ const Register = () => {
     googleSignIn()
       .then(async (res) => {
         const newUser = res.user;
-        console.log("Google login success:", newUser);
+        // console.log("Google login success:", newUser);
 
         const userData = {
           uid: newUser.uid,
@@ -107,6 +108,8 @@ const Register = () => {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(userData),
+          }).then(() => {
+            toast.success("Registration Successful!");
           });
         } catch (err) {
           console.error("Failed to save user to backend:", err);

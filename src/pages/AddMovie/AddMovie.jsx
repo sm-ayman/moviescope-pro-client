@@ -66,16 +66,6 @@ const AddMovie = () => {
       >
         Add a New Movie
       </motion.h2>
-      {/* movie-added-toast */}
-      <ToastContainer
-        position="top-center"
-        autoClose={4000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        pauseOnHover
-        theme="colored"
-      />
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Title */}
         <div>

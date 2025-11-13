@@ -1,21 +1,30 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, use } from "react";
 import { Link } from "react-router";
 import LoadingSpinner from "../../components/Spinner/LoadingSpinner";
 import { AuthContext } from "../../contexts/AuthContext";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { motion } from "framer-motion";
+import MovieNotFound from "../Err/MovieNotFound";
 
 const AllMovies = () => {
   const [allMovies, setAllMovies] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [watchlist, setWatchlist] = useState([]);
-  const { loading } = useContext(AuthContext);
+  const [isLoadingMovies, setIsLoadingMovies] = useState(true);
+  const { loading: authLoading } = use(AuthContext);
 
   useEffect(() => {
+    setIsLoadingMovies(true);
     fetch("https://moviescope-pro-server.vercel.app/movies")
       .then((res) => res.json())
-      .then((data) => setAllMovies(data))
-      .catch((err) => console.error("Failed to fetch movies:", err));
+      .then((data) => {
+        setAllMovies(data);
+        setIsLoadingMovies(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setIsLoadingMovies(false);
+      });
   }, []);
 
   useEffect(() => {
@@ -40,14 +49,9 @@ const AllMovies = () => {
     movie.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  if (loading) {
-    return (
-      <div className="w-full h-screen flex items-center justify-center bg-base-100 dark:bg-gray-900 transition-colors duration-300">
-        <LoadingSpinner />
-      </div>
-    );
+  if (authLoading || isLoadingMovies) {
+    return <LoadingSpinner />;
   }
-
   return (
     <section className="w-full py-16 bg-base-100 dark:bg-gray-900 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4">
@@ -68,26 +72,19 @@ const AllMovies = () => {
 
         <motion.div
           className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
-          initial="hidden"
-          animate="visible"
-          variants={{
-            hidden: {},
-            visible: {
-              transition: {
-                staggerChildren: 0.1,
-              },
-            },
-          }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
         >
           {filteredMovies.map((movie) => (
             <motion.div
               key={movie._id}
               className="relative bg-white/5 dark:bg-gray-800 backdrop-blur-md rounded-xl overflow-hidden shadow-lg cursor-pointer flex flex-col"
-              variants={{
-                hidden: { opacity: 0, y: 30 },
-                visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 120 } },
-              }}
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.98 }}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
             >
               {/* Heart Icon */}
               <button
@@ -106,6 +103,7 @@ const AllMovies = () => {
                 alt={movie.title}
                 className="w-full h-64 object-cover"
               />
+
               <div className="p-4 flex-1 flex flex-col justify-between">
                 <div>
                   <h3 className="text-xl font-bold light:text-gray-900 dark:text-white mb-1">
@@ -121,7 +119,7 @@ const AllMovies = () => {
 
                 <Link
                   to={`/movies/${movie._id}`}
-                  className="mt-4 inline-block px-4 py-2 text-white dark:text-white bg-primary rounded-lg hover:bg-primary/90 dark:hover:bg-primary/80 text-center transition"
+                  className="mt-4 inline-block px-4 py-2 text-white bg-primary rounded-lg hover:bg-primary/90 dark:hover:bg-primary/80 text-center transition"
                 >
                   Details
                 </Link>
@@ -130,10 +128,8 @@ const AllMovies = () => {
           ))}
         </motion.div>
 
-        {filteredMovies.length === 0 && (
-          <p className="text-center text-gray-500 dark:text-gray-300 mt-10 text-lg">
-            No movies found.
-          </p>
+        {filteredMovies.length === 0 && !isLoadingMovies && (
+          <MovieNotFound></MovieNotFound>
         )}
       </div>
     </section>

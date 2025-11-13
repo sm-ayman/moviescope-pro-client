@@ -54,16 +54,6 @@ const Login = () => {
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
       <div className="bg-base-200/40 backdrop-blur-xl shadow-xl rounded-xl p-8 w-full max-w-md border border-base-300">
-        {/* login-error-toast */}
-        <ToastContainer
-          position="top-center"
-          autoClose={4000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          pauseOnHover
-          theme="colored"
-        />
         {/* Logo + Title */}
         <div className="text-center mb-8">
           <Link to="/" className="flex items-center justify-center gap-2">
