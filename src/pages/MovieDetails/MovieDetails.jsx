@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from "react-router";
 import { motion } from "framer-motion";
 import LoadingSpinner from "../../components/Spinner/LoadingSpinner";
 import { AuthContext } from "../../contexts/AuthContext";
+import Swal from "sweetalert2";
 
 const MovieDetails = () => {
   const { id } = useParams();
@@ -10,7 +11,7 @@ const MovieDetails = () => {
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [id]);
@@ -48,15 +49,29 @@ const MovieDetails = () => {
   const isOwner = user?.email === movie.addedBy;
 
   const handleDelete = (id) => {
-
-    fetch(`https://moviescope-pro-server.vercel.app/movies/${id}`, {
-      method: "DELETE",
-    })
-      .then((res) => res.json())
-      .then(() => {
-        navigate("/my-collection"); 
-      })
-      .catch((err) => console.error("Failed to delete movie:", err));
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        fetch(`https://moviescope-pro-server.vercel.app/movies/${id}`, {
+          method: "DELETE",
+        })
+          .then((res) => res.json())
+          .then(() => {
+            Swal.fire("Deleted!", "Your movie has been deleted.", "success");
+            navigate("/my-collection"); // redirect after deletion
+          })
+          .catch((err) =>
+            Swal.fire("Error!", "Failed to delete movie.", "error")
+          );
+      }
+    });
   };
 
   return (

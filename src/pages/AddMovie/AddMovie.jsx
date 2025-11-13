@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { AuthContext } from "../../contexts/AuthContext";
 import { use } from "react";
 import { useNavigate } from "react-router";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 
 const AddMovie = () => {
   const { user } = use(AuthContext);
